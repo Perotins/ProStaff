@@ -1,0 +1,264 @@
+
+# .______   .______        ______        _______.___________.    ___       _______  _______  __       __       _______.___________.
+# |   _  \  |   _  \      /  __  \      /       |           |   /   \     |   ____||   ____||  |     |  |     /       |           |
+# |  |_)  | |  |_)  |    |  |  |  |    |   (----`---|  |----`  /  ^  \    |  |__   |  |__   |  |     |  |    |   (----`---|  |----`
+# |   ___/  |      /     |  |  |  |     \   \       |  |      /  /_\  \   |   __|  |   __|  |  |     |  |     \   \       |  |
+# |  |      |  |\  \----.|  `--'  | .----)   |      |  |     /  _____  \  |  |     |  |     |  `----.|  | .----)   |      |  |
+# | _|      | _| `._____| \______/  |_______/       |__|    /__/     \__\ |__|     |__|     |_______||__| |_______/       |__|
+
+# Welcome to the configuration file for ProStaff! If you need any help or assistance while using this plugin please message me on Spigot @ Perotin or
+# discord @ Perotin#3447
+
+
+#  _______            _
+# (_______)       _  (_)
+#  _     _ ____ _| |_ _  ___  ____   ___
+# | |   | |  _ (_   _) |/ _ \|  _ \ /___)
+# | |___| | |_| || |_| | |_| | | | |___ |
+#  \_____/|  __/  \__)_|\___/|_| |_(___/
+#         |_|
+
+# Would you like this plugin to use bungeecord?
+bungeecord: true
+
+# Configure the following to setup your MySQL databases. More database systems may be supported at a later time (ask me which to add support for!)
+host: 127.0.0.1
+user: "root"
+password: "123"
+database: "ProStaff"
+
+# README: The following options have to do with the names and descriptions of commands in this plugin
+
+# What should the command name be that players run to open the GUI that has all the staff members?
+command-name: "staff"
+
+# What should the aliases be for this command?
+command-aliases:
+   - "stafflist"
+   - "sl"
+
+command-description: "See which staff members are online!"
+
+# What should the usage for this command be?
+command-usage: "/stafflist"
+
+
+# What should the command name be that players run when they need a Mod ASAP (think /a on mineplex or hypixel)
+mod-command: "mod"
+
+# Aliases for the command above
+mod-aliases:
+   - "a"
+
+mod-description: "Send a report  to a mod or message a player cross networks if a moderator runs the command"
+
+mod-usage: "/mod <message>"
+
+# What should the command name be that staff members run to view reports?
+reports-command: "reports"
+
+reports-description: "Open up all reports"
+
+reports-usage: "/reports"
+
+reports-aliases:
+   - "rep"
+
+# What is the command name that staff members use to chat between servers or local server
+staffchat-command: "bchat"
+
+staffchat-usage: "/bchat"
+
+staffchat-description: "A toggle for whether or not you should talk in staff chat"
+
+staffchat-aliases:
+   - "bs"
+   - "staffchat"
+   - "sc"
+
+# What is the command name that staff members use to teleport to a specific player cross servers?
+stafftp-command: "btp"
+
+stafftp-description: "See if a player is online within the network by teleporting to the server they are on!"
+
+stafftp-usage: "/btp <player>"
+
+stafftp-aliases:
+   - "stp"
+   - "serverteleport"
+
+bstaff-command: "bstaff"
+
+bstaff-description: "See other commands available to you"
+
+bstaff-usage: "/bstaff"
+
+bstaff-aliases:
+   - "bungeestaff"
+   - "helpstaff"
+
+# Cooldown for creating a report with the /mod command
+# Set to 0 or below for no cooldown
+cooldown-mod: 0
+
+
+# README:
+# The following sections pertains to configuring the inventory to however you'd like.
+# I recommend keeping the default options as it makes for a clean look and doesn't fill the screen
+# too much.
+
+
+# How many slots should the inventory have? Must be a multiple of 9
+inventory-size: 27
+
+
+# Which slot should we start placing the heads of staff members in and which slot should we end in before making a new
+# page?
+# NOTE: If you are having trouble visualing this then try googling "Bukkit inventory slots layout" and then look at the images!
+# Programmatically things start from 0, so the first slot is actually 0 and the last slot is 53 not 54 (if working with 6 rows)
+start-slot: 0
+end-slot: 8
+
+# Which slot should we put the previous page button in?
+# NOTE: The same rules apply from above. Meaning that 0 is the first slot. Also take note that the slot number has to be less than the
+# inventory-size and cannot be within the start and end range!
+
+previous-page-slot: 20
+
+# Which slot should we put the next page button in?
+# NOTE: All rules apply from the previous page button! Take note to make this number less than inventory-size, not the same as the previous
+# page button and not within the range of the start and end range!
+
+next-page-slot: 24
+
+# Which slot should we put the vanish and unvanish button in?
+# NOTE: All rules apply from above, if you haven't read them by now then you should because you can mess up the menu
+# by not taking note of those things!
+vanish-button-slot: 18
+
+# Which slot should we put the info button in?
+# NOTE: All rules apply from above, if you haven't read them by now then you should because you can mess up the menu
+# by not taking note of those things!
+info-star-slot: 22
+
+
+
+# .   ,
+# |\ /|
+# | V | ,-. ,-. ,-. ,-: ,-: ,-. ,-.
+# |   | |-' `-. `-. | | | | |-' `-.
+# '   ' `-' `-' `-' `-` `-| `-' `-'
+#                       `-'
+
+# Every message that is used in this plugin can be found here!
+# NOTE: Only use placeholders that appear in the original message!
+
+
+cancel: "cancel"
+
+
+error: "&cAn error has occurred. Please tell your system operator of this error!"
+
+
+
+inventory-name: "Staff List"
+
+next-page-display: "&7Next page >>"
+no-permission: "&cYou do not have permission to do this!"
+now-vanish: "$prefix$ &7&oYou are now vanished in /sl!"
+now-unvanish: "$prefix$ &7&oYou are now unvanished in /sl!"
+not-apart: "$prefix$ &c'$player$'&a is not apart of any ranks!"
+
+prefix: "&8[&3ProStaff&8] "
+
+info-star-right: "&eRight click to teleport to their server"
+info-star-left: "&6Left click to send a message"
+
+previous-page-display: "&7<< Previous page"
+
+
+staff-lore-0: "$rank$ "
+staff-lore-1: "         &7$name$"
+staff-lore-2: "&6Server "
+staff-lore-3: "         &7$server$"
+
+reloaded: "$prefix$ &ProStaff has been reloaded!"
+
+send-message: "&eType in the message you wish to send to &a$player$&e!"
+send-message1: "&eYou can type &ccancel&e to cancel."
+
+cancelled-create-message: "&cNo longer creating a rank!"
+cancelled-send-message: "&eNo longer sending a message to &c$player$!"
+cancelled-add-member: "&cCancelled add member task."
+
+cross-server-message-format-receiver: "&7&o[$name$] -> $message$"
+sent-message: "&7&oSent message to $name$!"
+
+vanish: "&eVanish"
+vanish-lore: "&7&o(Only you can see this)"
+
+unvanish: "&eUnvanish"
+
+# NOTE: The following messages have to do with the admin menu
+admin-inventory-name: "Configure Ranks"
+
+info-sign-1: "&eLeft click to manage members of a rank"
+info-sign-2: "&cRight click to delete a rank"
+
+
+# NOTE: The following have to do with the manage members menu
+star-click: "&eClick this star to add a member to this rank!"
+left-click: "&cClick a head to remove the user from this rank!"
+
+add-member-1: "&eType in the UUID of the player you wish to add to this rank: "
+add-member-2: "&eTo get the UUID of a player go to https://namemc.com/search?q=NAME."
+add-member-3: "&eTo cancel type '&ccancel&e'."
+
+add-member-dupe: "&c$name$ is already in a rank!"
+create-rank-dupe: "&c$rank$ rank already exists!"
+
+incorrect-uuid: "&cNot a valid UUID! Make sure there are 4 dashes and 32 characters or type cancel to cancel!"
+incorrect-player: "&cCannot validate that player! Make sure they've played on the server before or type cancel to cancel!"
+
+confirm-delete-rank: "Confirm deletion of $rank$"
+cancel: "&a&lCancel"
+confirm: "&c&lDelete"
+
+
+# NOTE: The following messages have to do with creating a new rank
+
+create-rank: "&aClick here to create a rank"
+create-rank11: "&eYou are about to create a new staff rank."
+create-rank-1: "&eTo cancel this process at any time, just type &ccancel."
+create-rank-2: "&eType in the name of the rank you want to create:"
+create-rank-3: "&eType in the (number) power that this rank should have!"
+create-rank-4: "&eType in the color that this rank should have!"
+create-rank-41: "&eSee this link for wool colors: &ahttps://minecraft.gamepedia.com/Wool#Block_data"
+create-rank-5: "&eClick &a&lHERE&e to confirm this rank or type cancel to cancel."
+
+name-placeholder: "&eName: &a$name$"
+power-placeholder: "&ePower: &a$power$"
+wool-placeholder: "&eWool color: &a$wool$"
+
+empty-string: "&eCannot have only spaces! Try again or type &ccancel&e to cancel."
+invalid-number: "&ePlease type only a number or type cancel to cancel!"
+
+invalid-wool-data: "&ePlease type a number between 0-15. See data values here: &ahttps://minecraft.gamepedia.com/Wool#Block_data"
+
+
+# NOTE: The following messages have to do with the /mod command
+mod-message-sent: "&6Staff will respond shortly if available!"
+
+mod-message-format: "&7[&6$server$:&e $name$&7] -> &e$message$"
+mod-message-hover: "&eClick here to view the report!"
+
+# NOTE: The following messages have to do with the /reports command
+
+reports-menu: "Active Reports"
+reports-info-display: "&aClicking on a report will claim it as yours to handle"
+reports-info-lore-1: "&eUse /mod <message> to write back to the reporter"
+reports-info-lore-right: "&eRight click to teleport to the server."
+close-menu: "&eClose menu"
+
+
+

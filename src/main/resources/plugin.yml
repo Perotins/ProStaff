@@ -1,0 +1,13 @@
+name: ProStaff
+version: ${version}
+author: Perotin
+main: me.perotin.prostaff.ProStaff
+description: The ultimate staff list
+commands:
+   confirmrank:
+      description: Used for creating a rank, not meant to be used by players!
+      usage: /confirmrank <name> <power> <color>
+   stafflistadmin:
+      description: Open's the admin menu
+      usage: /stafflistadmin
+      aliases: [sla, sladmin, stafflista]
