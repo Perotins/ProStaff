@@ -106,7 +106,7 @@ public class StaffMenu {
                 blankPage.setItem(plugin.getConfiguration().getInt("vanish-button-slot"), createItem(Material.ENDER_PEARL, ProStaff.getColorizedString("unvanish"), ProStaff.getColorizedString("vanish-lore")));
 
             } else if (!rank.getVanished().contains(toShow.getUniqueId()) && rank.getUuids().contains(toShow.getUniqueId())){
-                blankPage.setItem(plugin.getConfiguration().getInt("vanish-button-slot"), createItem(Material.EYE_OF_ENDER, ProStaff.getColorizedString("vanish"), ProStaff.getColorizedString("vanish-lore")));
+                blankPage.setItem(plugin.getConfiguration().getInt("vanish-button-slot"), createItem(Material.ENDER_EYE, ProStaff.getColorizedString("vanish"), ProStaff.getColorizedString("vanish-lore")));
             }
         }
 

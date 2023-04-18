@@ -232,7 +232,7 @@ create-rank11: "&eYou are about to create a new staff rank."
 create-rank-1: "&eTo cancel this process at any time, just type &ccancel."
 create-rank-2: "&eType in the name of the rank you want to create:"
 create-rank-3: "&eType in the (number) power that this rank should have!"
-create-rank-4: "&eType in the color that this rank should have!"
+create-rank-4: "&eType in the color that this rank should have! (E.g. 'RED' for red wool)"
 create-rank-41: "&eSee this link for wool colors: &ahttps://minecraft.gamepedia.com/Wool#Block_data"
 create-rank-5: "&eClick &a&lHERE&e to confirm this rank or type cancel to cancel."
 

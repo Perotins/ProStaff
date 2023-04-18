@@ -24,6 +24,11 @@ public class Messages {
         toSend.sendMessage(send);
     }
 
+
+    public void message(String msg) {
+        toSend.sendMessage(msg);
+    }
+
     public String getString(String path){
         return ProStaff.getColorizedString(path);
     }

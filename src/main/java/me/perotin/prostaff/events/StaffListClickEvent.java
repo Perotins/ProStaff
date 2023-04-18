@@ -16,6 +16,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -37,6 +38,7 @@ public class StaffListClickEvent implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         Inventory inventory = event.getInventory();
+        InventoryView inventoryView = event.getView();
         if (event.getWhoClicked() instanceof Player) {
             Player clicker = (Player) event.getWhoClicked();
             Messages messages = new Messages(clicker);
@@ -48,12 +50,12 @@ public class StaffListClickEvent implements Listener {
                 if (inventory == null) return;
 
 
-                if (inventory.getName().equals(ProStaff.getColorizedString("inventory-name"))) {
+                if (inventoryView.getTitle().equals(ProStaff.getColorizedString("inventory-name"))) {
                     event.setCancelled(true);
                     ItemStack clicked = event.getCurrentItem();
                     if(clicked == null || clicked.getType() == Material.AIR ) return;
 
-                    if (clicked.getType() == Material.SKULL_ITEM) {
+                    if (clicked.getType() == Material.PLAYER_HEAD) {
                         String name = ChatColor.stripColor(clicked.getItemMeta().getLore().get(0)).trim();
 
                         if (clicker.getName().equals(name)) return;
@@ -111,7 +113,7 @@ public class StaffListClickEvent implements Listener {
 
                         }
 
-                    } else if (clicked.getType() == Material.EYE_OF_ENDER) {
+                    } else if (clicked.getType() == Material.ENDER_EYE) {
                         StaffRank rank = StaffRank.getRank(clicker.getUniqueId());
                         if (rank == null) {
                             clicker.closeInventory();

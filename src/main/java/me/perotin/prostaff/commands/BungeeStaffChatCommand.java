@@ -36,7 +36,7 @@ public class BungeeStaffChatCommand extends Command {
                 player.sendMessage(new Messages(player).getString("no-permission"));
                 return true;
             }
-            if(args.length == 0){
+            if(args.length == 0 || (args.length != 1 && args[0].equalsIgnoreCase("local"))){
                 if(ProStaff.BUNGEECORD){
                     if(bungeeChatStaff.contains(player.getUniqueId())){
                         bungeeChatStaff.remove(player.getUniqueId());

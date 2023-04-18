@@ -92,7 +92,7 @@ public class ReportsMenu {
         inventory.setItem(4, ItemUtil.createItem(messages.getString("reports-info-display"), messages.getString("reports-info-lore-1"),
                 messages.getString("reports-info-lore-right"), Material.NETHER_STAR));
         inventory.setItem(0, ItemUtil.createItem(messages.getString("close-menu"), "", Material.FEATHER));
-        inventory.setItem(53, ItemUtil.createItem(ProStaff.getColorizedString("next-page-display"), "", Material.SIGN));
+        inventory.setItem(53, ItemUtil.createItem(ProStaff.getColorizedString("next-page-display"), "", Material.OAK_SIGN));
         return inventory;
     }
 

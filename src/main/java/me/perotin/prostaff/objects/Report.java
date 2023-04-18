@@ -97,19 +97,19 @@ public class Report {
         report.setItem(4, ItemUtil.createItem(ChatColor.YELLOW + "Report from " + player.getName(), "", Material.PAPER));
         report.setItem(19, ItemUtil.createItem(ChatColor.GRAY + "Report:", ChatColor.YELLOW + message, Material.BOOK));
         if(responder == null) {
-            ItemStack notClaimed = ItemUtil.createItem(ChatColor.GRAY + "Claimed: " + ChatColor.RED + "None", ChatColor.GRAY + "Click to claim", Material.INK_SACK);
+            ItemStack notClaimed = ItemUtil.createItem(ChatColor.GRAY + "Claimed: " + ChatColor.RED + "None", ChatColor.GRAY + "Click to claim", Material.INK_SAC);
             notClaimed.setDurability((short) 8);
             report.setItem(21, notClaimed);
         } else {
 
-            ItemStack notClaimed = ItemUtil.createItem(ChatColor.GRAY + "Claimed: ", ChatColor.GREEN + getNameOfResponder(), Material.INK_SACK);
+            ItemStack notClaimed = ItemUtil.createItem(ChatColor.GRAY + "Claimed: ", ChatColor.GREEN + getNameOfResponder(), Material.INK_SAC);
             notClaimed.setDurability((short) 10);
             report.setItem(21, notClaimed);
         }
 
         report.setItem(23, ItemUtil.createItem(ChatColor.GRAY + "Send a message to " + player.getName(), "", Material.MAP));
         if(ProStaff.BUNGEECORD) {
-            report.setItem(25, ItemUtil.createItem(ChatColor.GRAY + "Teleport to server " + server, "", Material.FIREWORK));
+            report.setItem(25, ItemUtil.createItem(ChatColor.GRAY + "Teleport to server " + server, "", Material.FIREWORK_ROCKET));
             report.setItem(31, ItemUtil.createItem(ChatColor.GRAY +"Click to close the report", "", Material.CHEST));
 
         } else {

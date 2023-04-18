@@ -21,10 +21,10 @@ public class StaffRank implements Comparable<StaffRank> {
     private final int power;
     private List<UUID> uuids;
     private List<UUID> vanished;
-    private final int color;
+    private final String color;
 
 
-    public StaffRank(String name, int power, List<UUID> uuids, int color) {
+    public StaffRank(String name, int power, List<UUID> uuids, String color) {
         this.name = name;
         this.power = power;
         this.uuids = uuids;
@@ -54,7 +54,7 @@ public class StaffRank implements Comparable<StaffRank> {
     }
 
 
-    int getColor() {
+    String getColor() {
         return color;
     }
 
@@ -86,7 +86,7 @@ public class StaffRank implements Comparable<StaffRank> {
         if(!getUuids().isEmpty()) {
             for (UUID uuid : getUuids()) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-                ItemStack stack = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
+                ItemStack stack = new ItemStack(Material.PLAYER_HEAD, 1, (byte) 3);
                 SkullMeta meta = (SkullMeta) stack.getItemMeta();
                 meta.setOwner(offlinePlayer.getName());
                 meta.setDisplayName(ChatColor.YELLOW + offlinePlayer.getName());
@@ -102,7 +102,7 @@ public class StaffRank implements Comparable<StaffRank> {
 
     }
     public ItemStack getHead(String player, String server) {
-        ItemStack head = new ItemStack(Material.SKULL_ITEM, (short) 1, (byte) 3);
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD, (short) 1, (byte) 3);
         SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
         skullMeta.setDisplayName(ProStaff.getColorizedString("staff-lore-0").replace("$rank$", getName()));
         ArrayList<String> lores = new ArrayList<>();
@@ -116,11 +116,14 @@ public class StaffRank implements Comparable<StaffRank> {
     }
 
     public ItemStack getAdminDisplay() {
-        ItemStack wool = new ItemStack(Material.WOOL, 1, (byte) getColor());
+        Material parsedWool = Material.getMaterial(getColor().toUpperCase()+"_WOOL");
+        ItemStack wool = new ItemStack(parsedWool);
         ItemMeta woolMeta = wool.getItemMeta();
         woolMeta.setDisplayName(getName());
+        // not exactly sure what the commented out code is for, seems redundant
+//        ArrayList<String> lores = new ArrayList<>();
 //                int x = 0;
-//                for(UUID uuid : rank.getUuids()){
+//                for(UUID uuid : getUuids()){
 //                    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
 //                    lores.add(x, ChatColor.YELLOW + "- " + offlinePlayer.getName());
 //                    x++;

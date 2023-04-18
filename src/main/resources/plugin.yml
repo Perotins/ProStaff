@@ -3,6 +3,7 @@ version: ${version}
 author: Perotin
 main: me.perotin.prostaff.ProStaff
 description: The ultimate staff list
+api-version: 1.13
 commands:
    confirmrank:
       description: Used for creating a rank, not meant to be used by players!

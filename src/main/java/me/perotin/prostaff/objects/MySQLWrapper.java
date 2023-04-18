@@ -1,14 +1,10 @@
 package me.perotin.prostaff.objects;
 
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+
 import me.perotin.prostaff.ProStaff;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +15,8 @@ public class MySQLWrapper {
     private String database;
     private String password;
     private String host;
-    private HikariDataSource hikariDataSource;
+    private String url;
+   // private HikariDataSource hikariDataSource;
 
 
     public MySQLWrapper(ProStaff plugin) {
@@ -27,38 +24,42 @@ public class MySQLWrapper {
         this.database = plugin.getConfig().getString("database");
         this.password = plugin.getConfig().getString("password");
         this.host = plugin.getConfig().getString("host");
-
+        this.url = "jdbc:mysql://" + host + ":3306/" + database + "?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
     }
 
 
-    public void init() {
-        // configuring HikariConfig object
-        HikariConfig config;
-        config = new HikariConfig();
-        config.setJdbcUrl("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
-        config.setUsername(user);
-        config.setPassword(password);
-        config.setMaximumPoolSize(15);
-        config.addDataSourceProperty("databaseName", database);
-        config.addDataSourceProperty("serverName", host);
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        config.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
+//    public void init() {
+//        // configuring HikariConfig object
+//        HikariConfig config;
+//        config = new HikariConfig();
+//        config.setMaxLifetime(1800000);
+//        config.setJdbcUrl("jdbc:mysql://" + host + ":3306/" + database + "?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true");
+//        config.setUsername(user);
+//        config.setPassword(password);
+//        config.setMaximumPoolSize(5);
+//        config.addDataSourceProperty("databaseName", database);
+//        config.addDataSourceProperty("serverName", host);
+//        config.addDataSourceProperty("cachePrepStmts", "true");
+//        config.addDataSourceProperty("prepStmtCacheSize", "250");
+//        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+////        config.setDataSourceClassName("com.mysql.cj.jdbc.MysqlDataSource");
+//
+////        this.hikariDataSource = new HikariDataSource(config);
+//
+//    }
 
-        this.hikariDataSource = new HikariDataSource(config);
 
+    public Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(url, user, password);
     }
 
 
-    private void cleanup() {
-        hikariDataSource.close();
 
-    }
+
 
     public void addAllRanks() {
 
-        try (Connection connection = hikariDataSource.getConnection()) {
+        try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("TRUNCATE TABLE StaffRanks");
             statement.executeUpdate();
             statement = connection.prepareStatement("TRUNCATE TABLE StaffRankMembers");
@@ -72,7 +73,7 @@ public class MySQLWrapper {
                     statement = connection.prepareStatement(sql);
                     statement.setString(1, rank.getName());
                     statement.setInt(2, rank.getPower());
-                    statement.setInt(3, rank.getColor());
+                    statement.setString(3, rank.getColor());
                     statement.executeUpdate();
 
                     for (UUID uuid : rank.getUuids()) {
@@ -87,7 +88,6 @@ public class MySQLWrapper {
             }
 
             statement.close();
-            cleanup();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -99,15 +99,15 @@ public class MySQLWrapper {
 
     public List<StaffRank> loadRanks() {
         List<StaffRank> ranks = new ArrayList<>();
-        try (Connection connection = hikariDataSource.getConnection()) {
+        try (Connection connection = getConnection()) {
             String query1 = "SELECT * FROM StaffRanks";
             PreparedStatement statement = connection.prepareStatement(query1);
             ResultSet results = statement.executeQuery();
             while (results.next()) {
                 String name = results.getString("name");
                 int power = results.getInt("power");
-                int color = results.getInt("color");
-                String query2 = "SELECT * FROM StaffRankMembers WHERE rank = ?";
+                String color = results.getString("color");
+                String query2 = "SELECT * FROM StaffRankMembers WHERE `rank` = ?";
                 statement = connection.prepareStatement(query2);
                 statement.setString(1, name);
                 ResultSet res2 = statement.executeQuery();
@@ -135,13 +135,13 @@ public class MySQLWrapper {
 
     public void createTables() {
 
-        try (Connection connection = hikariDataSource.getConnection()) {
+        try (Connection connection = getConnection()) {
 
-            PreparedStatement create = connection.prepareStatement("CREATE TABLE IF NOT EXISTS StaffRanks (name VARCHAR(50) NOT NULL PRIMARY KEY, power INT NOT NULL, color INT NOT NULL)");
+            PreparedStatement create = connection.prepareStatement("CREATE TABLE IF NOT EXISTS StaffRanks (name VARCHAR(50) NOT NULL PRIMARY KEY, power INT NOT NULL, color VARCHAR(50) NOT NULL)");
             create.executeUpdate();
 
             create = connection.prepareStatement("CREATE TABLE IF NOT EXISTS StaffRankMembers" +
-                    "(rank VARCHAR(50) NOT NULL, uuid VARCHAR(36) NOT NULL, PRIMARY KEY (rank, uuid))");
+                    "(`rank` VARCHAR(50) NOT NULL, uuid VARCHAR(36) NOT NULL, PRIMARY KEY (`rank`, uuid))");
             create.executeUpdate();
             create.close();
         } catch (SQLException ex) {

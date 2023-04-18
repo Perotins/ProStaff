@@ -88,12 +88,13 @@ public class ProStaff extends JavaPlugin implements PluginMessageListener {
         }
         // setting up MySQL
         sql = new MySQLWrapper(this);
-        sql.init();
         sql.createTables();
         ranks.addAll(sql.loadRanks());
         updateRanks();
+
         registerCommand(new StaffListCommandLegacy(configuration.getString("command-name"), configuration.getString("command-description"),
                 configuration.getString("command-usage"), configuration.getStringList("command-aliases"), this));
+
         registerCommand(new ModCommand(configuration.getString("mod-command"), configuration.getString("mod-description"),
                 configuration.getString("mod-usage"), configuration.getStringList("mod-aliases"), this));
         registerCommand(new ReportsCommand(configuration.getString("reports-command"), configuration.getString("reports-description"),
@@ -115,6 +116,7 @@ public class ProStaff extends JavaPlugin implements PluginMessageListener {
         Bukkit.getPluginManager().registerEvents(new BungeeStaffChatEvent(this), this);
         getCommand("confirmrank").setExecutor(new ConfirmRankCommand());
         getCommand("stafflistadmin").setExecutor(new StaffListAdminCommand());
+
 
 
 
@@ -299,7 +301,7 @@ public class ProStaff extends JavaPlugin implements PluginMessageListener {
                         UUID add = UUID.fromString(msgin.readUTF());
                         rank.getUuids().add(add);
                         for(Player update : Bukkit.getOnlinePlayers()){
-                            if(update.getInventory().getName().equals(ChatColor.stripColor(rank.getName() + " Members"))){
+                            if(update.getOpenInventory().getTitle().equals(ChatColor.stripColor(rank.getName() + " Members"))){
                                 rank.showMembers(update);
                             }
                         }
@@ -318,7 +320,7 @@ public class ProStaff extends JavaPlugin implements PluginMessageListener {
                         UUID add = UUID.fromString(msgin.readUTF());
                         rank.getUuids().remove(add);
                         for(Player update : Bukkit.getOnlinePlayers()){
-                            if(update.getInventory().getName().equals(ChatColor.stripColor(rank.getName() + " Members"))){
+                            if(update.getOpenInventory().getTitle().equals(ChatColor.stripColor(rank.getName() + " Members"))){
                                 rank.showMembers(update);
                             }
                         }
@@ -363,8 +365,8 @@ public class ProStaff extends JavaPlugin implements PluginMessageListener {
                     in.readFully(msgbytes);
 
                     for(Player update : Bukkit.getOnlinePlayers()){
-                        if(update.getInventory().getName().equals(getColorizedString("admin-inventory-name"))
-                                || update.getInventory().getName().equals(ChatColor.stripColor(rank.getName() + " Members"))){
+                        if(update.getOpenInventory().getTitle().equals(getColorizedString("admin-inventory-name"))
+                                || update.getOpenInventory().getTitle().equals(ChatColor.stripColor(rank.getName() + " Members"))){
                             new AdminMenu(update).showMainMenu();
                         }
                     }
@@ -385,12 +387,12 @@ public class ProStaff extends JavaPlugin implements PluginMessageListener {
                 try {
                     String name = msgin.readUTF();
                     int power = msgin.readInt();
-                    int color = msgin.readInt();
+                    String color = msgin.readUTF();
 
                     getRanks().add(new StaffRank(name, power, new ArrayList<>(), color));
                     updateRanks();
                     for(Player update : Bukkit.getOnlinePlayers()){
-                        if(update.getInventory().getName().equals(getColorizedString("admin-inventory-name"))){
+                        if(update.getOpenInventory().getTitle().equals(getColorizedString("admin-inventory-name"))){
                             new AdminMenu(update).showMainMenu();
                         }
                     }
@@ -414,7 +416,7 @@ public class ProStaff extends JavaPlugin implements PluginMessageListener {
                     String server = msgin.readUTF();
                     Date date = new Date();
                     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                    Report report = new Report(name,UUID.fromString(uniqueId) , format.format(date), modMessage, server);
+                    Report report = new Report(name, UUID.fromString(uniqueId) , format.format(date), modMessage, server);
                     addReport(report);
                     TextComponent formatMessage = new TextComponent(TextComponent.fromLegacyText(new Messages(player).getString("mod-message-format")
                             .replace("$server$", server).replace("$name$", name).replace("$message$", modMessage)));

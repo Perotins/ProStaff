@@ -20,7 +20,9 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +38,7 @@ public class AdminMenuClickEvent implements Listener {
     private String name = null;
     private int power = -1;
     private int color = -1;
+    private String colorWord = "";
     private static HashMap<UUID, StaffRank> addMember = new HashMap<>();
 
 
@@ -43,13 +46,14 @@ public class AdminMenuClickEvent implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         Inventory clicked = event.getInventory();
+        InventoryView invView = event.getView();
         if (event.getWhoClicked() instanceof Player) {
             Player clicker = (Player) event.getWhoClicked();
             this.messages = new Messages(clicker);
             ItemStack itemStack = event.getCurrentItem();
 
 
-            if (clicked.getName().equals(messages.getString("admin-inventory-name"))) {
+            if (invView.getTitle().equals(messages.getString("admin-inventory-name"))) {
 
                 event.setCancelled(true);
                 //if(itemStack == null || itemStack.getType() == Material.AIR) return;
@@ -63,7 +67,7 @@ public class AdminMenuClickEvent implements Listener {
                     messages.sendMessage("create-rank-2");
                     return;
                 }
-                if (itemStack.getType() == Material.WOOL) {
+                if (itemStack.getType().toString().contains("WOOL")) {
                     if (event.getClick() == ClickType.LEFT) {
                         for (StaffRank rank : ProStaff.getInstance().getRanks()) {
                             if (rank.getAdminDisplay().getItemMeta().getDisplayName().equals(itemStack.getItemMeta().getDisplayName())) {
@@ -87,7 +91,7 @@ public class AdminMenuClickEvent implements Listener {
                 }
             }
             for(StaffRank rank : ProStaff.getInstance().getRanks()) {
-                if (clicked.getName().equals(messages.getString("confirm-delete-rank")
+                if (invView.getTitle().equals(messages.getString("confirm-delete-rank")
                 .replace("$rank$", rank.getName()))) {
                     if(itemStack.getType() == Material.REDSTONE_BLOCK){
 
@@ -109,7 +113,7 @@ public class AdminMenuClickEvent implements Listener {
             boolean manageClick = false;
             StaffRank clickedIn = null;
             for (StaffRank rank : ProStaff.getInstance().getRanks()) {
-                if (clicked.getName().equals(ChatColor.stripColor(rank.getName()) + " Members")) {
+                if (invView.getTitle().equals(ChatColor.stripColor(rank.getName()) + " Members")) {
                     manageClick = true;
                     clickedIn = rank;
                 }
@@ -124,7 +128,7 @@ public class AdminMenuClickEvent implements Listener {
                     messages.sendMessage("add-member-1");
                     messages.sendMessage("add-member-2");
                     messages.sendMessage("add-member-3");
-                } else if(itemStack.getType() == Material.SKULL_ITEM){
+                } else if(itemStack.getType() == Material.PLAYER_HEAD){
                     String name = itemStack.getItemMeta().getDisplayName();
                     for(OfflinePlayer player : clickedIn.getUuids().stream().map(Bukkit::getOfflinePlayer).collect(Collectors.toList())){
 
@@ -204,29 +208,44 @@ public class AdminMenuClickEvent implements Listener {
                         messages.sendMessage("empty-string");
                     }
                 } else if (color == -1) {
+
+                    String[] woolColors = {"RED", "GREEN", "ORANGE", "WHITE",
+                   "LIGHT_BLUE", "YELLOW", "LIME", "PINK", "GRAY", "LIGHT_GRAY", "CYAN", "PURPLE", "BLUE", "BROWN",
+                    "GREEN", "BLACK"};
+
+
                     if (!message.trim().isEmpty()) {
-                        try {
-                            this.color = Integer.parseInt(message);
-                            if (color < 0 || color > 15) {
-                                messages.sendMessage("invalid-wool-data");
-                                this.color = -1;
-                                return;
+                            this.colorWord = message;
+                            boolean valid = false;
+                            for (String s : woolColors) {
+                                if (s.equalsIgnoreCase(message)) {
+                                    valid = true;
+                                    break;
+                                }
                             }
-                            IntStream.range(0, 20).forEach(i -> chatter.sendMessage(" "));
-                            messages.sendMessagePlaceholder("name-placeholder", "$name$", name);
-                            messages.sendMessagePlaceholder("power-placeholder", "$power$", power + "");
-                            messages.sendMessagePlaceholder("wool-placeholder", "$wool$", color + "");
-                            TextComponent confirm = new TextComponent(TextComponent.fromLegacyText(messages.getString("create-rank-5")));
-                            confirm.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + "Click to confirm").create()));
-                            confirm.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/confirmrank " + name + " " + power + " " + color));
+                            if (valid) {
+                                IntStream.range(0, 20).forEach(i -> chatter.sendMessage(" "));
+                                messages.sendMessagePlaceholder("name-placeholder", "$name$", name);
+                                messages.sendMessagePlaceholder("power-placeholder", "$power$", power + "");
+                                messages.sendMessagePlaceholder("wool-placeholder", "$wool$", color + "");
+                                TextComponent confirm = new TextComponent(TextComponent.fromLegacyText(messages.getString("create-rank-5")));
+                                confirm.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + "Click to confirm").create()));
+                                confirm.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/confirmrank " + name + " " + power + " " + colorWord));
 
-                            chatter.spigot().sendMessage(confirm);
+                                chatter.spigot().sendMessage(confirm);
+                            } else {
+                                messages.message(ChatColor.YELLOW + "Invalid wool color! List of colors is:");
+                                StringBuilder builder = new StringBuilder();
+                                for (String s : woolColors) {
+                                    builder.append(ChatColor.YELLOW + s + ", ");
+                                }
+
+                                messages.message(builder.toString().trim().substring(0, builder.toString().trim().length() - 1));
+
+                            }
 
 
-                        } catch (NumberFormatException e) {
-                            messages.sendMessage("invalid-number");
 
-                        }
                     } else {
                         messages.sendMessage("empty-string");
                     }
@@ -267,7 +286,13 @@ public class AdminMenuClickEvent implements Listener {
                                     BungeeMessanger.sendAddMemberMessage(offlinePlayer.getUniqueId(), rank);
                                 }
                                 rank.addUuid(offlinePlayer.getUniqueId());
-                                rank.showMembers(chatter);
+
+                                new BukkitRunnable() {
+                                    @Override
+                                    public void run() {
+                                        rank.showMembers(chatter);
+                                    }
+                                }.runTask(ProStaff.getInstance());
                                 IntStream.range(0, 20).forEach(i -> chatter.sendMessage(" "));
                                 addMember.remove(chatter.getUniqueId());
                             } else {

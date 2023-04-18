@@ -7,6 +7,7 @@ import me.perotin.prostaff.events.AdminMenuClickEvent;
 import me.perotin.prostaff.objects.menus.AdminMenu;
 import me.perotin.prostaff.objects.StaffRank;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -33,12 +34,17 @@ public class ConfirmRankCommand implements CommandExecutor {
                 String name = args[0];
                 String power = args[1];
                 String color = args[2];
+                if (Material.getMaterial(color+"_WOOL") == null) {
+                    sender.sendMessage("Not a valid color! Look at https://minecraft.fandom.com/wiki/Wool for a list" +
+                            "of all colored wool.");
+                    sender.sendMessage("Only use the color part of the item. Example: RED_WOOL, type 'red'.");
+                    return true;
+                }
 
-                int powerInt, colorInt;
+                int powerInt;
                 powerInt = Integer.parseInt(power);
-                colorInt = Integer.parseInt(color);
 
-                StaffRank newRank = new StaffRank(name, powerInt, new ArrayList<>(), colorInt);
+                StaffRank newRank = new StaffRank(name, powerInt, new ArrayList<>(), color);
                 ProStaff.getInstance().getRanks().add(newRank);
                 ProStaff.getInstance().updateRanks();
                 if(ProStaff.BUNGEECORD) {
@@ -52,7 +58,7 @@ public class ConfirmRankCommand implements CommandExecutor {
                     try {
                         msgout.writeUTF(name); // You can do anything you want with msgout
                         msgout.writeInt(powerInt);
-                        msgout.writeInt(colorInt);
+                        msgout.writeUTF(color);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

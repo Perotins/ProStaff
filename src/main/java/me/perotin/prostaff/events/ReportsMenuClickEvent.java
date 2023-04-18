@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.ByteArrayOutputStream;
@@ -35,12 +36,13 @@ public class ReportsMenuClickEvent implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         Inventory inventory = event.getInventory();
+        InventoryView invView = event.getView();
         if (event.getWhoClicked() instanceof Player) {
             Player clicker = (Player) event.getWhoClicked();
             ItemStack clicked = event.getCurrentItem();
             if(clicked == null || clicked.getType() == Material.AIR || !clicked.hasItemMeta()) return;
 
-            if (inventory.getName().equals(plugin.getConfiguration().getString("reports-menu"))) {
+            if (invView.getTitle().equals(plugin.getConfiguration().getString("reports-menu"))) {
                 event.setCancelled(true);
                 ReportsMenu paging = ReportsMenu.users.get(clicker.getUniqueId());
                 if(clicked.getType() == Material.PAPER){
@@ -53,20 +55,20 @@ public class ReportsMenuClickEvent implements Listener {
             Report report = null;
 
             for(Report r : ProStaff.getInstance().getReports()){
-                if(inventory.getName().equals(r.getDate()+": " + r.getNameOfReporter())){
+                if(invView.getTitle().equals(r.getDate()+": " + r.getNameOfReporter())){
                     report = r;
                 }
             }
 
             if(report != null){
                 event.setCancelled(true);
-                if(clicked.getType() == Material.FIREWORK){
+                if(clicked.getType() == Material.FIREWORK_ROCKET){
                     ByteArrayDataOutput out = plugin.getOut();
                     out.writeUTF("Connect");
                     out.writeUTF(report.getServer());
                     clicker.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
 
-                } else if(clicked.getType() == Material.INK_SACK && clicked.getDurability() == (short) 8){
+                } else if(clicked.getType() == Material.INK_SAC && clicked.getDurability() == (short) 8){
                     report.setResponder(clicker.getUniqueId(), clicker.getName());
                     report.showReport(clicker);
                     if(ProStaff.BUNGEECORD) {
