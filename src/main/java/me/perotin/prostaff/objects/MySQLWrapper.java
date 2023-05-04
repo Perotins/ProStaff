@@ -3,6 +3,7 @@ package me.perotin.prostaff.objects;
 
 
 import me.perotin.prostaff.ProStaff;
+import org.bukkit.Bukkit;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -21,6 +22,14 @@ public class MySQLWrapper {
 
     public MySQLWrapper(ProStaff plugin) {
         this.user = plugin.getConfig().getString("user");
+        assert user != null;
+        if (user.equals("insertUserNameHere")) {
+            Bukkit.getLogger().info("[ProStaff] Please configure Prostaff/config.yml to use a proper database!");
+            Bukkit.getLogger().info("[ProStaff] Plugin now disabling");
+            ProStaff.FAILURE_SHUTDOWN = true;
+
+            Bukkit.getServer().getPluginManager().disablePlugin(plugin);
+        }
         this.database = plugin.getConfig().getString("database");
         this.password = plugin.getConfig().getString("password");
         this.host = plugin.getConfig().getString("host");

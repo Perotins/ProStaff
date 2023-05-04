@@ -70,10 +70,16 @@ public class ProStaff extends JavaPlugin implements PluginMessageListener {
     public static HashMap<String, String> staffTpCommand =  new HashMap<>();
 
     public static boolean BUNGEECORD = false;
+
+    public static boolean FAILURE_SHUTDOWN = false;
     private ArrayList<Report> reports;
 
     @Override
     public void onEnable() {
+
+
+
+
 
         instance = this;
         ranks = new ArrayList<>();
@@ -82,6 +88,15 @@ public class ProStaff extends JavaPlugin implements PluginMessageListener {
         configuration = getConfig();
         reports = new ArrayList<>();
         BUNGEECORD = configuration.getBoolean("bungeecord");
+        if (getConfig().getString("user").equals("insertUserNameHere")) {
+            Bukkit.getLogger().info("[ProStaff] Please configure Prostaff/config.yml to use a proper database!");
+            Bukkit.getLogger().info("[ProStaff] Plugin now disabling");
+            FAILURE_SHUTDOWN = true;
+
+            Bukkit.getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        FAILURE_SHUTDOWN = false;
         if (BUNGEECORD) {
             this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
             this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this);
@@ -95,18 +110,32 @@ public class ProStaff extends JavaPlugin implements PluginMessageListener {
         registerCommand(new StaffListCommandLegacy(configuration.getString("command-name"), configuration.getString("command-description"),
                 configuration.getString("command-usage"), configuration.getStringList("command-aliases"), this));
 
-        registerCommand(new ModCommand(configuration.getString("mod-command"), configuration.getString("mod-description"),
-                configuration.getString("mod-usage"), configuration.getStringList("mod-aliases"), this));
-        registerCommand(new ReportsCommand(configuration.getString("reports-command"), configuration.getString("reports-description"),
-                configuration.getString("reports-usage"), configuration.getStringList("reports-aliases"), this));
-        registerCommand(new BungeeStaffChatCommand(configuration.getString("staffchat-command"), configuration.getString("staffchat-description")
-        , configuration.getString("staffchat-usage"), configuration.getStringList("staffchat-aliases"), this));
-        registerCommand(new BungeePlayerTeleportCommand(configuration.getString("stafftp-command"), configuration.getString("stafftp-description"),
-                configuration.getString("stafftp-usage"), configuration.getStringList("stafftp-aliases"), this));
-        registerCommand(new BungeeStaffHelpCommand(this, configuration.getString("bstaff-command"), configuration.getString("bstaff-description"), configuration.getString("bstaff-usage"),
-        configuration.getStringList("bstaff-aliases")));
-
-
+        boolean modActive, staffChat, reportsActive, stafftp, bstaff;
+        modActive = getConfiguration().getBoolean("mod-active");
+        staffChat = getConfiguration().getBoolean("staffchat-active");
+        reportsActive = getConfiguration().getBoolean("reports-active");
+        stafftp = getConfiguration().getBoolean("stafftp-active");
+        bstaff = getConfiguration().getBoolean("mod-active");
+        if (modActive) {
+            registerCommand(new ModCommand(configuration.getString("mod-command"), configuration.getString("mod-description"),
+                    configuration.getString("mod-usage"), configuration.getStringList("mod-aliases"), this));
+        }
+        if (reportsActive) {
+            registerCommand(new ReportsCommand(configuration.getString("reports-command"), configuration.getString("reports-description"),
+                    configuration.getString("reports-usage"), configuration.getStringList("reports-aliases"), this));
+        }
+        if (staffChat) {
+            registerCommand(new BungeeStaffChatCommand(configuration.getString("staffchat-command"), configuration.getString("staffchat-description")
+                    , configuration.getString("staffchat-usage"), configuration.getStringList("staffchat-aliases"), this));
+        }
+       if (stafftp) {
+           registerCommand(new BungeePlayerTeleportCommand(configuration.getString("stafftp-command"), configuration.getString("stafftp-description"),
+                   configuration.getString("stafftp-usage"), configuration.getStringList("stafftp-aliases"), this));
+       }
+       if (bstaff) {
+           registerCommand(new BungeeStaffHelpCommand(this, configuration.getString("bstaff-command"), configuration.getString("bstaff-description"), configuration.getString("bstaff-usage"),
+                   configuration.getStringList("bstaff-aliases")));
+       }
 //        registerCommand(new StaffListCommandLegacy("test", "Test1",
 //            "/test", Arrays.asList("t", "t"), this));
 
@@ -134,6 +163,10 @@ public class ProStaff extends JavaPlugin implements PluginMessageListener {
 
     @Override
     public void onDisable() {
+
+        if(FAILURE_SHUTDOWN){
+            return;
+        }
         sql.addAllRanks();
         if (instance != null) {
             instance = null;

@@ -146,8 +146,8 @@ public class StaffListClickEvent implements Listener {
             String message = event.getMessage();
             Messages messages = new Messages(chatter);
             if (message.equalsIgnoreCase("cancel")) {
-                sendMessage.remove(chatter);
                 messages.sendMessagePlaceholder("cancelled-send-message", "$player$", sendMessage.get(chatter));
+                sendMessage.remove(chatter);
             } else {
                 ByteArrayDataOutput out = plugin.getOut();
                 out.writeUTF("Message");
