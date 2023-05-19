@@ -19,8 +19,8 @@ public class StaffRank implements Comparable<StaffRank> {
 
     private final String name;
     private final int power;
-    private List<UUID> uuids;
-    private List<UUID> vanished;
+    private final List<UUID> uuids;
+    private final List<UUID> vanished;
     private final String color;
 
 

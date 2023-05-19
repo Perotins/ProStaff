@@ -48,7 +48,8 @@ mod-command: "mod"
 
 
 # Should the mod command be active? setting this to false will not register /mod
-mod-active: true
+# I currently do not recommend this feature as it seems to be a little buggy.
+mod-active: false
 
 # Aliases for the command above
 mod-aliases:
@@ -63,7 +64,7 @@ reports-command: "reports"
 
 # Should reports be enabled?
 
-reports-active: true
+reports-active: false
 
 reports-description: "Open up all reports"
 

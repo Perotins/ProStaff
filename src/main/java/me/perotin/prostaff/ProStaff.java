@@ -115,7 +115,7 @@ public class ProStaff extends JavaPlugin implements PluginMessageListener {
         staffChat = getConfiguration().getBoolean("staffchat-active");
         reportsActive = getConfiguration().getBoolean("reports-active");
         stafftp = getConfiguration().getBoolean("stafftp-active");
-        bstaff = getConfiguration().getBoolean("mod-active");
+        bstaff = getConfiguration().getBoolean("bstaff-active");
         if (modActive) {
             registerCommand(new ModCommand(configuration.getString("mod-command"), configuration.getString("mod-description"),
                     configuration.getString("mod-usage"), configuration.getStringList("mod-aliases"), this));
@@ -133,6 +133,7 @@ public class ProStaff extends JavaPlugin implements PluginMessageListener {
                    configuration.getString("stafftp-usage"), configuration.getStringList("stafftp-aliases"), this));
        }
        if (bstaff) {
+           Bukkit.getLogger().info("Enabled bstaff command");
            registerCommand(new BungeeStaffHelpCommand(this, configuration.getString("bstaff-command"), configuration.getString("bstaff-description"), configuration.getString("bstaff-usage"),
                    configuration.getStringList("bstaff-aliases")));
        }
@@ -145,6 +146,7 @@ public class ProStaff extends JavaPlugin implements PluginMessageListener {
         Bukkit.getPluginManager().registerEvents(new BungeeStaffChatEvent(this), this);
         getCommand("confirmrank").setExecutor(new ConfirmRankCommand());
         getCommand("stafflistadmin").setExecutor(new StaffListAdminCommand());
+        getCommand("prostaffreload").setExecutor(new ProStaffReloadCommand(this));
 
 
 
